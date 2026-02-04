@@ -1,12 +1,12 @@
 package thuchanh.ngohuuduc.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Positive;
 import lombok.*;
 import org.hibernate.Hibernate;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,23 +17,25 @@ import java.util.Objects;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "category")
-
-public class Category {
+@Table(name = "invoices")
+public class Invoice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name", length = 50, nullable = false)
-    @Size(min = 1, max = 50, message = "Name must be between 1 and 50 characters")
-    @NotBlank(message = "Name must not be blank")
-    private String name;
+    @Column(name = "invoice_date")
+    @Builder.Default
+    private Date invoiceDate = new Date();
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    @Column(name = "total")
+    @Positive(message = "Total must be positive")
+    private Double price;
+
+    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
     @ToString.Exclude
     @Builder.Default
-    private List<Book> books = new ArrayList<>();
+    private List<ItemInvoice> itemInvoices = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {
@@ -41,13 +43,18 @@ public class Category {
             return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o))
             return false;
-        Category category = (Category) o;
+        Invoice invoice = (Invoice) o;
         return getId() != null && Objects.equals(getId(),
-                category.getId());
+                invoice.getId());
     }
 
     @Override
     public int hashCode() {
         return getClass().hashCode();
     }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @ToString.Exclude
+    private User user;
 }

@@ -1,13 +1,10 @@
 package thuchanh.ngohuuduc.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Positive;
 import lombok.*;
 import org.hibernate.Hibernate;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -17,23 +14,22 @@ import java.util.Objects;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "category")
-
-public class Category {
+@Table(name = "item_invoice")
+public class ItemInvoice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
-
-    @Column(name = "name", length = 50, nullable = false)
-    @Size(min = 1, max = 50, message = "Name must be between 1 and 50 characters")
-    @NotBlank(message = "Name must not be blank")
-    private String name;
-
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    private Long Id;
+    @Column(name = "quantity")
+    @Positive(message = "Quantity must be positive")
+    private int quantity;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "book_id", referencedColumnName = "id")
     @ToString.Exclude
-    @Builder.Default
-    private List<Book> books = new ArrayList<>();
+    private Book book;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "invoice_id", referencedColumnName = "id")
+    @ToString.Exclude
+    private Invoice invoice;
 
     @Override
     public boolean equals(Object o) {
@@ -41,9 +37,9 @@ public class Category {
             return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o))
             return false;
-        Category category = (Category) o;
+        ItemInvoice that = (ItemInvoice) o;
         return getId() != null && Objects.equals(getId(),
-                category.getId());
+                that.getId());
     }
 
     @Override

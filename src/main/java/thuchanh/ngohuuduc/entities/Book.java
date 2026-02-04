@@ -45,6 +45,9 @@ public class Book {
     @ToString.Exclude
     private Category category;
 
+    @Column(name = "img_url")
+    private String imgUrl;
+
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     @ToString.Exclude
     @Builder.Default

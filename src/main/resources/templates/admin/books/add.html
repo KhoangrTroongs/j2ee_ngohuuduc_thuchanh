@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+    th:replace="~{admin/layout :: layout(content=~{:: section}, currentPage='books')}">
+
+<head>
+    <title>Thêm Sách Mới</title>
+</head>
+
+<body>
+    <section>
+        <div class="container-fluid">
+            <h2 class="fw-bold text-primary mb-4">Thêm Sách Mới</h2>
+
+            <div class="row">
+                <div class="col-md-8 col-lg-6">
+                    <div class="card shadow-sm border-0 rounded-3">
+                        <div class="card-body p-4">
+                            <form id="addBookForm" novalidate>
+                                <div class="mb-3">
+                                    <label class="form-label" for="title">Tên sách <span
+                                            class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" placeholder="Nhập tên sách..." id="title"
+                                        required="required" autofocus>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label" for="author">Tác giả <span
+                                            class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" placeholder="Nhập tên tác giả..."
+                                        id="author" required="required">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label" for="image">Bìa sách</label>
+                                    <input class="form-control" type="file" id="image" accept="image/*">
+                                    <div id="imagePreview" class="mt-2" style="display: none;">
+                                        <img src="" alt="Preview" style="max-width: 200px; border-radius: 8px;">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label" for="price">Giá bán ($) <span
+                                                class="text-danger">*</span></label>
+                                        <input class="form-control" type="number" step="0.01" id="price"
+                                            placeholder="0.00" required="required">
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label" for="category">Thể loại <span
+                                                class="text-danger">*</span></label>
+                                        <select class="form-select" id="category" required="required">
+                                            <option value="">-- Chọn thể loại --</option>
+                                            <option th:each="category : ${categories}" th:value="${category.id}"
+                                                th:text="${category.name}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="d-grid gap-2 mt-4">
+                                    <button type="submit" class="btn btn-primary btn-lg">Lưu Sách</button>
+                                    <a th:href="@{/admin/books}" class="btn btn-outline-secondary">Hủy bỏ</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            $(document).ready(function () {
+                // Image preview
+                $('#image').change(function () {
+                    const file = this.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            $('#imagePreview img').attr('src', e.target.result);
+                            $('#imagePreview').show();
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                });
+
+                $('#addBookForm').submit(async function (e) {
+                    e.preventDefault();
+
+                    let imgUrl = null;
+                    const imageFile = $('#image')[0].files[0];
+
+                    if (imageFile) {
+                        const imageData = new FormData();
+                        imageData.append('file', imageFile);
+
+                        try {
+                            console.log('Uploading image...', imageFile.name);
+                            const uploadRes = await $.ajax({
+                                url: '/api/v1/books/upload',
+                                type: 'POST',
+                                data: imageData,
+                                processData: false,
+                                contentType: false
+                            });
+                            console.log('Upload response:', uploadRes);
+                            imgUrl = uploadRes;
+                        } catch (err) {
+                            console.error('Upload error:', err);
+                            alert('Lỗi khi tải ảnh lên: ' + (err.responseText || err.statusText || 'Unknown error'));
+                            return;
+                        }
+                    }
+
+                    var formData = {
+                        title: $('#title').val(),
+                        author: $('#author').val(),
+                        price: $('#price').val(),
+                        categoryId: $('#category').val(),
+                        imgUrl: imgUrl
+                    };
+                    console.log('Submitting book data:', formData);
+
+                    $.ajax({
+                        url: '/api/v1/books',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(formData),
+                        success: function (res) {
+                            console.log('Book saved:', res);
+                            alert('Thêm sách thành công!');
+                            window.location.href = '/admin/books';
+                        },
+                        error: function (err) {
+                            console.error('Save error:', err);
+                            alert('Xảy ra lỗi khi thêm sách: ' + (err.responseText || 'Unknown error'));
+                        }
+                    });
+                });
+            });
+        </script>
+    </section>
+</body>
+
+</html>

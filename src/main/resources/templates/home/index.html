@@ -2,25 +2,91 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ỨNG DỤNG QUẢN LÝ SÁCH</title>
     <th:block th:replace="~{layout::link-css}"></th:block>
     <th:block th:replace="~{layout::custom-css}"></th:block>
+    <title>Trang chủ - BookStore</title>
 </head>
 
 <body>
     <th:block th:replace="~{layout::header}"></th:block>
-    <div class="container">
-        <nav class="navbar navbar-light bg-light">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="#">
-                    TRANG CHỦ ỨNG DỤNG QUẢN LÝ SÁCH - KẾT NỐI CSDL MYSQL
-                </a>
+
+    <!-- Full-screen Hero Banner -->
+    <div class="container-fluid p-0 mb-5">
+        <div class="row g-0 align-items-center bg-light" style="min-height: 80vh;">
+            <div class="col-lg-6 p-5">
+                <div class="px-5">
+                    <h1 class="display-3 fw-bold mb-4" style="color: var(--primary-color);">
+                        Thế Giới Sách <br> <span class="text-dark">Trong Tầm Tay</span>
+                    </h1>
+                    <p class="lead text-secondary mb-5">
+                        Khám phá hàng ngàn đầu sách hấp dẫn, từ văn học, kỹ năng sống đến công nghệ.
+                        Trau dồi tri thức mỗi ngày với BookStore.
+                    </p>
+                    <a href="/books" class="btn btn-primary btn-lg rounded-pill px-5 py-3 fw-bold">
+                        <i class="fa-solid fa-rocket me-2"></i> Khám Phá Ngay
+                    </a>
+                </div>
             </div>
-        </nav>
+            <div class="col-lg-6 d-none d-lg-block"
+                style="background: url('https://images.unsplash.com/photo-1507842217121-9e9f1929c5f7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80') center/cover no-repeat; min-height: 80vh;">
+            </div>
+        </div>
     </div>
+
+    <!-- Featured Categories Section -->
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Tại sao chọn BookStore?</h2>
+            <p class="text-muted">Chúng tôi cam kết mang lại trải nghiệm đọc sách tuyệt vời nhất.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100 text-center p-4">
+                    <div class="mb-3">
+                        <i class="fa-solid fa-truck-fast text-primary fa-3x"></i>
+                    </div>
+                    <h5 class="fw-bold">Giao Hàng Nhanh</h5>
+                    <p class="text-muted">Nhận sách ngay trong ngày với dịch vụ giao hàng hỏa tốc của chúng tôi.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100 text-center p-4">
+                    <div class="mb-3">
+                        <i class="fa-solid fa-tags text-primary fa-3x"></i>
+                    </div>
+                    <h5 class="fw-bold">Giá Tốt Nhất</h5>
+                    <p class="text-muted">Cam kết giá cạnh tranh cùng nhiều chương trình khuyến mãi hấp dẫn.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100 text-center p-4">
+                    <div class="mb-3">
+                        <i class="fa-solid fa-shield-halved text-primary fa-3x"></i>
+                    </div>
+                    <h5 class="fw-bold">Hỗ Trợ 24/7</h5>
+                    <p class="text-muted">Đội ngũ chăm sóc khách hàng luôn sẵn sàng giải đáp mọi thắc mắc của bạn.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Newsletter CTA -->
+    <div class="container my-5">
+        <div class="bg-primary text-white rounded-5 p-5 text-center">
+            <h2 class="fw-bold mb-3">Đăng Ký Nhận Tin</h2>
+            <p class="mb-4">Nhận thông báo về sách mới và ưu đãi độc quyền.</p>
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <input type="email" class="form-control form-control-lg border-0"
+                            placeholder="Email của bạn...">
+                        <button class="btn btn-dark btn-lg" type="button">Đăng Ký</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <th:block th:replace="~{layout::footer}"></th:block>
 </body>
 

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+    th:replace="~{admin/layout :: layout(content=~{:: section}, currentPage='orders')}">
+
+<head>
+    <title>Chi Tiết Đơn Hàng</title>
+</head>
+
+<body>
+    <section>
+        <div class="container-fluid">
+            <div class="d-flex align-items-center mb-4">
+                <a th:href="@{/admin/orders}" class="btn btn-outline-secondary btn-sm me-3">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </a>
+                <h2 class="fw-bold text-primary mb-0">Chi Tiết Đơn Hàng <span th:text="${'#' + order.id}"></span></h2>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card shadow-sm border-0 rounded-3 mb-4">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="mb-0 fw-bold">Danh sách sản phẩm</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="bg-light text-secondary">
+                                        <tr>
+                                            <th class="ps-4 py-3">Sản phẩm</th>
+                                            <th class="py-3">Giá</th>
+                                            <th class="py-3 text-center">Số lượng</th>
+                                            <th class="pe-4 py-3 text-end">Thành tiền</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="item : ${order.itemInvoices}">
+                                            <td class="ps-4">
+                                                <div class="fw-bold text-dark" th:text="${item.book.title}">Tên sách
+                                                </div>
+                                                <small class="text-muted" th:text="${item.book.author}">Tác giả</small>
+                                            </td>
+                                            <td th:text="${'$' + item.book.price}">$10.0</td>
+                                            <td class="text-center" th:text="${item.quantity}">1</td>
+                                            <td class="pe-4 text-end fw-bold"
+                                                th:text="${'$' + (item.book.price * item.quantity)}">$10.0</td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot class="bg-light">
+                                        <tr>
+                                            <td colspan="3" class="ps-4 py-3 text-end fw-bold">Tổng cộng:</td>
+                                            <td class="pe-4 py-3 text-end fw-bold text-primary h5"
+                                                th:text="${'$' + order.price}">$100.0</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card shadow-sm border-0 rounded-3 mb-4">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="mb-0 fw-bold">Thông tin khách hàng</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3" th:if="${order.user != null}">
+                                <label class="text-muted small d-block">Tên đăng nhập</label>
+                                <span class="fw-bold" th:text="${order.user.username}">username</span>
+                            </div>
+                            <div class="mb-3" th:if="${order.user != null}">
+                                <label class="text-muted small d-block">Email</label>
+                                <span th:text="${order.user.email}">email@example.com</span>
+                            </div>
+                            <div class="mb-3" th:if="${order.user != null}">
+                                <label class="text-muted small d-block">Số điện thoại</label>
+                                <span th:text="${order.user.phone ?: 'Chưa cập nhật'}">0123456789</span>
+                            </div>
+                            <div class="mb-0">
+                                <label class="text-muted small d-block">Ngày đặt hàng</label>
+                                <span th:text="${#dates.format(order.invoiceDate, 'dd-MM-yyyy HH:mm')}">Date</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>

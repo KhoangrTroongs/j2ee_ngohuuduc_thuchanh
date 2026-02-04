@@ -5,17 +5,28 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My App</title>
-    <link th:fragment="link-css" rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <title>BookStore - Thế giới sách</title>
+
+    <!-- Global Styles -->
+    <th:block th:fragment="link-css">
+        <!-- Bootstrap 5 -->
+        <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    </th:block>
+
+    <!-- Custom CSS -->
     <link th:fragment="custom-css" rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body class="d-flex flex-column h-100">
     <header th:fragment="header">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="/">HUTECH</a>
-                <button class="navbar-toggler" type="button" data-bs- toggle="collapse"
+        <nav class="navbar navbar-expand-lg fixed-top">
+            <div class="container">
+                <a class="navbar-brand" href="/">
+                    <i class="fa-solid fa-book-open-reader me-2"></i>BookStore
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -23,48 +34,73 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="/">Home</a>
+                            <a class="nav-link" href="/">Trang chủ</a>
                         </li>
                         <li class="nav-item" sec:authorize="hasAnyAuthority('ADMIN','USER')">
                             <a class="nav-link" href="/books">
-                                List Book
+                                Cửa hàng
                             </a>
                         </li>
                         <li class="nav-item" sec:authorize="hasAnyAuthority('ADMIN')">
-                            <a class="nav-link" href="/books/add">
-                                Add Book
+                            <a class="nav-link" href="/admin/books">
+                                <i class="fa-solid fa-screwdriver-wrench me-1"></i> Dashboard
                             </a>
                         </li>
-                        <li class="nav-item" sec:authorize="hasAnyAuthority('ADMIN','USER')">
+                        <li class="nav-item" sec:authorize="isAuthenticated()">
                             <a class="nav-link" href="/cart">
-                                Cart
+                                <i class="fa-solid fa-cart-shopping me-1"></i> Giỏ hàng
                             </a>
                         </li>
-                        <li sec:authorize="isAuthenticated()">
+                    </ul>
+
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+
+                        <li sec:authorize="isAuthenticated()" class="nav-item me-2 d-flex align-items-center">
+                            <span class="nav-link text-secondary" style="cursor: default;">
+                                <i class="fa-solid fa-user-circle me-1"></i> Xin chào, <span sec:authentication="name"
+                                    class="fw-bold text-dark">User</span>
+                            </span>
+                        </li>
+                        <li sec:authorize="isAuthenticated()" class="nav-item d-flex align-items-center">
                             <form th:action="@{/logout}" method="post">
-                                <button class="btn btn-outline-danger" type="submit">Logout</button>
+                                <button class="btn btn-outline-danger btn-sm rounded-pill px-3" type="submit">
+                                    <i class="fa-solid fa-right-from-bracket me-1"></i> Đăng xuất
+                                </button>
                             </form>
                         </li>
+
                         <li sec:authorize="!isAuthenticated()">
-                            <a class="btn btn-outline-primary" href="/login">
-                                Login
+                            <a class="btn btn-login" href="/login">
+                                Đăng nhập
                             </a>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
+        <div style="height: 80px;"></div> <!-- Spacer for fixed navbar -->
     </header>
-    <div class="container">
+
+    <div class="flex-shrink-0">
         <div th:fragment="content"></div>
     </div>
-    <footer th:fragment="footer" class="footer mt-auto py-3 bg-light">
-        <div class="container text-center">Copyright &copy;
-            <span th:text="${#dates.year(#dates.createNow())}"></span>
-            <a href="https://www.hutech.edu.vn/">HUTECH Education</a>
+
+    <footer th:fragment="footer" class="footer mt-auto">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    <h5 class="fw-bold mb-2" style="color: var(--primary-color);">BookStore</h5>
+                    <p class="small mb-0">Mang tri thức đến mọi nhà.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <p class="mb-0">&copy; <span th:text="${#dates.year(#dates.createNow())}"></span> HUTECH Education.
+                    </p>
+                    <p class="small">Designed with <i class="fa-solid fa-heart text-danger"></i> by Ngo Huu Duc</p>
+                </div>
+            </div>
         </div>
-        <script th:src="@{/js/bootstrap.min.js}"></script>
         <script th:src="@{/js/jquery-3.7.0.min.js}"></script>
+        <script th:src="@{/js/bootstrap.min.js}"></script>
     </footer>
 </body>
 

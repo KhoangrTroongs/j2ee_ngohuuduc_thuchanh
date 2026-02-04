@@ -78,7 +78,6 @@ public class BookController {
         @PostMapping("/edit")
         public String editBook(@Valid @ModelAttribute("book") Book book,
                         @NotNull BindingResult bindingResult,
-                        @RequestParam("categoryId") Long categoryId,
                         Model model) {
                 if (bindingResult.hasErrors()) {
                         var errors = bindingResult.getAllErrors()
@@ -90,7 +89,6 @@ public class BookController {
                                         categoryService.getAllCategories());
                         return "book/edit";
                 }
-                categoryService.getCategoryById(categoryId).ifPresent(book::setCategory);
                 bookService.updateBook(book);
                 return "redirect:/books";
         }

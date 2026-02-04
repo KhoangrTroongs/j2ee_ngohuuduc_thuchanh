@@ -37,6 +37,16 @@ public class UserController {
     public String register(@Valid @ModelAttribute("user") User user,
             @NotNull BindingResult bindingResult,
             Model model) {
+        if (userService.existsByUsername(user.getUsername())) {
+            bindingResult.rejectValue("username", "error.user", "Username already exists");
+        }
+        if (userService.existsByEmail(user.getEmail())) {
+            bindingResult.rejectValue("email", "error.user", "Email already exists");
+        }
+        if (userService.existsByPhone(user.getPhone())) {
+            bindingResult.rejectValue("phone", "error.user", "Phone number already exists");
+        }
+
         if (bindingResult.hasErrors()) {
             var errors = bindingResult.getAllErrors()
                     .stream()

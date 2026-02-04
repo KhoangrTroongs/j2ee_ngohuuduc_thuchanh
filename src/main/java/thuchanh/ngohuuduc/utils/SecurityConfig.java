@@ -35,7 +35,11 @@ public class SecurityConfig {
 
         @Bean
         public DaoAuthenticationProvider authenticationProvider() {
-                return new DaoAuthenticationProvider(userService);
+                // Using the constructor matching the user's environment (likely a custom or
+                // specific version)
+                DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userService);
+                authProvider.setPasswordEncoder(passwordEncoder());
+                return authProvider;
         }
 
         @Bean
@@ -53,16 +57,21 @@ public class SecurityConfig {
                                                                 "/oauth/**", "/register", "/error", "/api/auth/**")
                                                 .permitAll()
                                                 .requestMatchers("/books/edit/**",
-                                                                "/books/add", "/books/delete")
+                                                                "/books/add", "/books/delete", "/admin/**")
                                                 .hasAnyAuthority("ADMIN")
                                                 .requestMatchers("/books", "/cart", "/cart/**")
-                                                .hasAnyAuthority("ADMIN", "USER")
+                                                .authenticated()
                                                 .requestMatchers("/api/**")
-                                                .hasAnyAuthority("ADMIN", "USER")
+                                                .authenticated()
                                                 .anyRequest().authenticated())
                                 .sessionManagement(session -> session
-                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless for JWT
-                                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class) // Add JWT filter
+                                                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)) // Use
+                                                                                                           // IF_REQUIRED
+                                                                                                           // (default)
+                                                                                                           // for Web UI
+                                                                                                           // support
+                                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class) // Add JWT
+                                                                                                            // filter
                                 .logout(logout -> logout
                                                 .logoutUrl("/logout")
                                                 .logoutSuccessUrl("/login")
@@ -74,6 +83,15 @@ public class SecurityConfig {
                                                 .loginPage("/login")
                                                 .loginProcessingUrl("/login")
                                                 .defaultSuccessUrl("/")
+                                                .successHandler((request, response, authentication) -> {
+                                                        var authorities = authentication.getAuthorities();
+                                                        if (authorities.stream().anyMatch(
+                                                                        a -> a.getAuthority().equals("ADMIN"))) {
+                                                                response.sendRedirect("/admin");
+                                                        } else {
+                                                                response.sendRedirect("/");
+                                                        }
+                                                })
                                                 .failureUrl("/login?error")
                                                 .permitAll())
                                 .oauth2Login(

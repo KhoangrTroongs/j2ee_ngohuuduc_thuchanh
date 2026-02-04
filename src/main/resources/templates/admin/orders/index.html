@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+    th:replace="~{admin/layout :: layout(content=~{:: section}, currentPage='orders')}">
+
+<head>
+    <title>Quản Lý Đơn Hàng</title>
+</head>
+
+<body>
+    <section>
+        <div class="container-fluid">
+            <h2 class="fw-bold text-primary mb-4">Quản Lý Đơn Hàng</h2>
+
+            <div class="card shadow-sm border-0 overflow-hidden rounded-3">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light text-secondary">
+                                <tr>
+                                    <th class="ps-4 py-3">Mã Đơn</th>
+                                    <th class="py-3">Khách Hàng</th>
+                                    <th class="py-3">Ngày Đặt</th>
+                                    <th class="py-3">Tổng Tiền</th>
+                                    <th class="pe-4 py-3 text-end">Chi Tiết</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="order : ${orders}">
+                                    <td class="ps-4 fw-bold text-muted" th:text="${'#' + order.getId()}">#1</td>
+                                    <td>
+                                        <div class="fw-bold text-dark" th:if="${order.getUser() != null}"
+                                            th:text="${order.getUser().getUsername()}">User</div>
+                                        <div class="text-muted small" th:if="${order.getUser() != null}"
+                                            th:text="${order.getUser().getEmail()}">email</div>
+                                    </td>
+                                    <td class="text-muted"
+                                        th:text="${#dates.format(order.getInvoiceDate(), 'dd-MM-yyyy HH:mm')}">Date</td>
+                                    <td class="fw-bold text-success" th:text="${'$' + order.getPrice()}">$100.0</td>
+                                    <td class="pe-4 text-end">
+                                        <a th:href="@{/admin/orders/{id}(id=${order.getId()})}"
+                                            class="btn btn-outline-info btn-sm" title="Xem chi tiết">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr th:if="${orders.empty}">
+                                    <td colspan="5" class="text-center py-4 text-muted">Chưa có đơn hàng nào.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>

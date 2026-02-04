@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:fragment="layout(content, currentPage)">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <!-- Bootstrap 5 & FontAwesome -->
+    <th:block th:fragment="link-css">
+        <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    </th:block>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #343a40;
+            min-height: 100vh;
+            color: white;
+            transition: all 0.3s;
+        }
+
+        .sidebar a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            padding: 10px 20px;
+            display: block;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar a:hover {
+            color: white;
+            background-color: #495057;
+        }
+
+        .sidebar .active {
+            color: white;
+            background-color: #0d6efd;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body class="d-flex">
+    <div class="sidebar d-flex flex-column p-3">
+        <h4 class="text-center mb-4">Admin Panel</h4>
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item">
+                <a th:href="@{/admin/books}" class="nav-link" th:classappend="${currentPage == 'books'} ? 'active'">
+                    <i class="fa-solid fa-book me-2"></i> Sách
+                </a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/admin/categories}" class="nav-link"
+                    th:classappend="${currentPage == 'categories'} ? 'active'">
+                    <i class="fa-solid fa-list me-2"></i> Thể Loại
+                </a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/admin/users}" class="nav-link" th:classappend="${currentPage == 'users'} ? 'active'">
+                    <i class="fa-solid fa-users me-2"></i> Người Dùng
+                </a>
+            </li>
+            <li class="nav-item">
+                <a th:href="@{/admin/orders}" class="nav-link" th:classappend="${currentPage == 'orders'} ? 'active'">
+                    <i class="fa-solid fa-file-invoice-dollar me-2"></i> Đơn Hàng
+                </a>
+            </li>
+            <li class="nav-item mt-4">
+                <a th:href="@{/}" class="nav-link text-warning">
+                    <i class="fa-solid fa-house me-2"></i> Về Trang Chủ
+                </a>
+            </li>
+        </ul>
+        <div class="mt-auto">
+            <form th:action="@{/logout}" method="post">
+                <button class="btn btn-danger w-100" type="submit">
+                    <i class="fa-solid fa-right-from-bracket me-2"></i> Đăng xuất
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="content">
+        <div th:replace="${content}"></div>
+    </div>
+
+    <script th:src="@{/js/jquery-3.7.0.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+</body>
+
+</html>
